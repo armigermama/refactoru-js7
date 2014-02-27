@@ -8,6 +8,7 @@ var http = require('http');
 var path = require('path');
 var mongoose = require('mongoose');
 var ApplicantModel = require('./models/applicantmodel.js');
+var ApplicantController = require('./controllers/applicantController.js');
 
 var app = express();
 
@@ -26,30 +27,20 @@ app.use(express.static(path.join(__dirname, 'public')));
 mongoose.connect('mongodb://localhost/insights');
 
 //renders the index page
-app.get('/', function(req, res){
-	res.render('index');
-});
+app.get('/', ApplicantController.index);
 
 // displays a list of applicants
-app.get('/applicants', function(req, res){
-	var data = ApplicantModel.find({}, function(err, docs) {
-		console.log('data', docs);
-		res.render('applicants', {applicants: docs} );
-	});
-	
-});
+app.get('/applicants', ApplicantController.listAll);
 
-// creates and applicant
-app.post('/applicant', function(req, res){
-	// Here is where you need to get the data
-	// from the post body and store it
-	var newApplicant = new ApplicantModel(req.body);
-	console.log('req.body',req.body);
-	newApplicant.save(function(err){
-		res.render('success');
-	});
-	
-});
+// creates an applicant
+app.post('/applicant', ApplicantController.addNew);
+
+// delete an applicant
+app.get('/applicants/remove/:id', ApplicantController.remove);
+app.get('/applicants/removeAjax/:id', ApplicantController.removeAjax);
+
+// render one applicant
+app.get('/applicants/:id', ApplicantController.listOne);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

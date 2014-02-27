@@ -12,9 +12,9 @@ block content
 					th YoE
 					th Why
 					th Delete
-			tbody: for applicant in applicants
+			tbody
 				tr 
-					td: a(href='/applicants/#{applicant._id}') #{applicant.name}
+					td #{applicant.name}
 					td #{applicant.bio}
 					td: ul
 						for skill in applicant.skills
@@ -22,4 +22,4 @@ block content
 					td #{applicant.years}
 					td #{applicant.why}
 					td: a(href='/applicants/remove/#{applicant._id}').button.remove-applicant Delete
-		a(href='/') Enter applicant manually here...
+		a(href='/applicants') Back to applicants list
